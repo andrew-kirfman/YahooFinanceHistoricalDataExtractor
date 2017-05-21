@@ -97,14 +97,14 @@ class YFHistoricalDataExtract(object):
         os.system("rm -rf %s" % self.output_dir)
             
     def setup_directories(self):
-        if not os.exists(self.output_dir):
+        if not os.path.exists(self.output_dir):
             try:
                 os.makedirs(self.output_dir)
             except OSError as e:
                 print "[ERROR]: %s" % str(e)
                 raise CannotCreateDirectory()
                 
-        if not os.exists(self.output_dir + "/dividend_history"):
+        if not os.path.exists(self.output_dir + "/dividend_history"):
             try:
                 os.makedirs(self.output_dir + "/dividend_history")
             except OsError as e:

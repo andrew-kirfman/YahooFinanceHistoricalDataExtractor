@@ -77,7 +77,7 @@ class YFHistoricalDataExtract(object):
             self.clear_directories()
         
         # Check to see if the file containing ticker symbols exists
-        if not os.exists(stock_file):
+        if not os.path.exists(stock_file):
             raise BadTickerFile()
         
         # Try to make the directory structure that the data will be stored in

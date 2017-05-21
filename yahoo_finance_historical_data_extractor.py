@@ -113,17 +113,17 @@ class YFHistoricalDataExtract(object):
 				
 	
 	
-	def get_historical_data(self, threads = 200):
+	def get_historical_data(self):
 		stock_file = open(self.ticker_file, "r")
 
 		candidates_to_test = []
 
-		pool = ThreadPool(threads)
+		pool = ThreadPool(self.thread_limit)
 
 		for ticker in stock_file.readlines():
 			candidates_to_test.append(ticker.strip())
 
-		pool.map(read_ticker_historical, candidates_to_test)
+		pool.map(self.read_ticker_historical, candidates_to_test)
 	
     def read_ticker_historical(self, ticker_symbol):
         URL = "https://finance.yahoo.com/quote/%s/history/" % ticker_symbol

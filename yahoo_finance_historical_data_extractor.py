@@ -47,7 +47,7 @@ class CannotCreateDirectory(Exception):
 	pass
 
 
-class YahooFinanceHistoricalDataExtractor(object):
+class YFHistoricalDataExtract(object):
 	"""
 	Function for grabbing historical stock data from yahoo finance.  Utilizes
 	the HTTP_Request_Randomizer library to make proxied function calls so as to

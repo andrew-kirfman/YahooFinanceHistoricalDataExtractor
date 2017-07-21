@@ -26,7 +26,7 @@ import json
 
 sys.path.append("./HTTP_Request_Randomizer")
 
-from http.requests.proxy.requestProxy import RequestProxy
+from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
 from bs4 import BeautifulSoup
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -51,51 +51,51 @@ class YFHistoricalDataExtract(object):
     """
     Function for grabbing historical stock data from yahoo finance.  Utilizes
     the HTTP_Request_Randomizer library to make proxied function calls so as to
-    avoid IPbans from relevant sources.  
-    
+    avoid IPbans from relevant sources.
+
     <More Info Here!!!>
     """
-    
+
     def __init__(self, stock_file, data_storage_dir = "./historical_stock_data", threads=10, clear_existing = True):
         """
         Initializes the proxy server as well as directories that all of
-        the read in historical data will be stored to.  
-        
-        Note: The directory structure could already exist and the data could already be there.  
+        the read in historical data will be stored to.
+
+        Note: The directory structure could already exist and the data could already be there.
         It does not always make sense to delete the old data and start again.  If the clear_existing
-        variable is set, clear the existing directories.  The default is to clear the existing 
-        directories containing historical data and start over.  
+        variable is set, clear the existing directories.  The default is to clear the existing
+        directories containing historical data and start over.
         """
-        
+
         self.proxy_server = RequestProxy()
         self.output_dir = data_storage_dir
         self.ticker_file = stock_file
         self.thread_limit = threads
-        
+
         # If the user asks for it, clear the existing directory structure
         if clear_existing is True:
             self.clear_directories()
-        
+
         # Check to see if the file containing ticker symbols exists
         if not os.path.exists(stock_file):
             raise BadTickerFile()
-        
+
         # Try to make the directory structure that the data will be stored in
         self.setup_directories()
-        
+
         try:
             os.makedirs("%s/dividends" % self.output_dir)
         except OSError:
             print "[Error]: Could not create directory structure."
             raise CannotCreateDirectory()
-            
+
     def clear_directories(self):
         """
         Wipe the existing directory structure if it exists.
         """
-        
+
         os.system("rm -rf %s" % self.output_dir)
-            
+
     def setup_directories(self):
         if not os.path.exists(self.output_dir):
             try:
@@ -103,16 +103,16 @@ class YFHistoricalDataExtract(object):
             except OSError as e:
                 print "[ERROR]: %s" % str(e)
                 raise CannotCreateDirectory()
-                
+
         if not os.path.exists(self.output_dir + "/dividend_history"):
             try:
                 os.makedirs(self.output_dir + "/dividend_history")
             except OsError as e:
                 print "[ERROR]: %s" % str(e)
                 raise CannotCreateDirectory()
-                
-    
-    
+
+
+
     def get_historical_data(self):
         stock_file = open(self.ticker_file, "r")
 
@@ -124,7 +124,7 @@ class YFHistoricalDataExtract(object):
             candidates_to_test.append(ticker.strip())
 
         pool.map(self.read_ticker_historical, candidates_to_test)
-    
+
     def read_ticker_historical(self, ticker_symbol):
         URL = "https://finance.yahoo.com/quote/%s/history/" % ticker_symbol
         response = None
